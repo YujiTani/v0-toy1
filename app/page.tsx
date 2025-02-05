@@ -1,5 +1,7 @@
 "use client"
 
+import { useState, useEffect } from "react"
+
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 
@@ -40,6 +42,25 @@ const getColor = (income: number) => {
 }
 
 export default function UpdatedAverageIncomeChart() {
+  // マウント完了判定用の state
+  const [mounted, setMounted] = useState(false)
+
+  // スマホ判定用の state （幅が768px未満ならスマホと判断）
+  const [isMobile, setIsMobile] = useState(false)
+
+  useEffect(() => {
+    const updateWindowSize = () => {
+      setIsMobile(window.innerWidth < 864)
+
+    }
+    updateWindowSize()
+    window.addEventListener("resize", updateWindowSize)
+    setMounted(true)
+    return () => window.removeEventListener("resize", updateWindowSize)
+  }, [])
+
+  if (!mounted) return null;
+
   return (
     <Card className="w-full max-w-4xl">
       <CardHeader>
@@ -52,7 +73,7 @@ export default function UpdatedAverageIncomeChart() {
             <BarChart layout="vertical" data={data} margin={{ top: 5, right: 30, left: 80, bottom: 5 }}>
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis type="number" />
-              <YAxis dataKey="country" type="category" width={80} />
+              <YAxis dataKey="country" type="category" width={isMobile ? 0 : 80} hide={isMobile} />
               <Tooltip
                 content={({ active, payload }) => {
                   if (active && payload && payload.length > 0) {
