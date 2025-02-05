@@ -73,7 +73,12 @@ export default function UpdatedAverageIncomeChart() {
             <BarChart layout="vertical" data={data} margin={{ top: 5, right: 30, left: 80, bottom: 5 }}>
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis type="number" />
-              <YAxis dataKey="country" type="category" width={isMobile ? 0 : 80} hide={isMobile} />
+              <YAxis 
+                dataKey="country" 
+                type="category" 
+                width={isMobile ? 30 : 80} 
+                tickFormatter={(value, index) => `${index + 1}位${isMobile ? '' : ` ${value}`}`}
+              />
               <Tooltip
                 content={({ active, payload }) => {
                   if (active && payload && payload.length > 0) {
