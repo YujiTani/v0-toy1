@@ -1,101 +1,95 @@
-import Image from "next/image";
+"use client"
 
-export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="https://nextjs.org/icons/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="https://nextjs.org/icons/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
-  );
+const data = [
+  { country: "スイス", income: 15.73 },
+  { country: "米国", income: 14.02 },
+  { country: "イスラエル", income: 13.39 },
+  { country: "デンマーク", income: 11.13 },
+  { country: "パナマ", income: 9.96 },
+  { country: "ノルウェー", income: 9.61 },
+  { country: "ドイツ", income: 9.28 },
+  { country: "オーストラリア", income: 8.96 },
+  { country: "フィンランド", income: 8.44 },
+  { country: "オーストリア", income: 8.23 },
+  { country: "オランダ", income: 8.22 },
+  { country: "スウェーデン", income: 7.74 },
+  { country: "アイルランド", income: 7.73 },
+  { country: "英国", income: 7.65 },
+  { country: "ニュージーランド", income: 7.55 },
+  { country: "フランス", income: 6.99 },
+  { country: "ベルギー", income: 6.89 },
+  { country: "シンガポール", income: 6.67 },
+  { country: "香港", income: 6.66 },
+  { country: "日本", income: 6.03 },
+  { country: "インド", income: 5.0 },
+  { country: "中国", income: 2.5 },
+  { country: "フィリピン", income: 3.0 },
+  { country: "タイ", income: 1.8 },
+  { country: "ベトナム", income: 1.5 },
+  { country: "インドネシア", income: 1.2 },
+].sort((a, b) => b.income - a.income)
+
+const getColor = (income) => {
+  const minIncome = Math.min(...data.map((d) => d.income))
+  const maxIncome = Math.max(...data.map((d) => d.income))
+  const normalizedIncome = (income - minIncome) / (maxIncome - minIncome)
+  return `rgb(0, ${Math.floor(100 + normalizedIncome * 155)}, ${Math.floor(200 + normalizedIncome * 55)})`
 }
+
+export default function UpdatedAverageIncomeChart() {
+  return (
+    <Card className="w-full max-w-4xl">
+      <CardHeader>
+        <CardTitle>各国の平均年収比較</CardTitle>
+        <CardDescription>単位: 百万円</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <div className="h-[1000px]">
+          <ResponsiveContainer width="100%" height="100%">
+            <BarChart layout="vertical" data={data} margin={{ top: 5, right: 30, left: 80, bottom: 5 }}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis type="number" />
+              <YAxis dataKey="country" type="category" width={80} />
+              <Tooltip
+                content={({ active, payload }) => {
+                  if (active && payload && payload.length) {
+                    return (
+                      <div className="bg-white p-2 border border-gray-300 rounded shadow">
+                        <p className="font-bold">{payload[0].payload.country}</p>
+                        <p>{`平均年収: ${payload[0].value.toFixed(2)}百万円`}</p>
+                      </div>
+                    )
+                  }
+                  return null
+                }}
+              />
+              <Legend />
+              <Bar
+                dataKey="income"
+                name="平均年収"
+                fill="#0066cc"
+                shape={(props) => {
+                  return (
+                    <rect
+                      x={props.x}
+                      y={props.y}
+                      width={props.width}
+                      height={props.height}
+                      fill={getColor(props.payload.income)}
+                      rx={4}
+                      ry={4}
+                    />
+                  )
+                }}
+              />
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
+      </CardContent>
+    </Card>
+  )
+}
+
