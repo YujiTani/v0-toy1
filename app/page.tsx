@@ -62,65 +62,67 @@ export default function UpdatedAverageIncomeChart() {
   if (!mounted) return null;
 
   return (
-    <Card className="w-full max-w-4xl">
-      <CardHeader>
-        <CardTitle>各国の平均年収比較</CardTitle>
-        <CardDescription>単位: 百万円</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <div className="h-[1000px]">
-          <ResponsiveContainer width="100%" height="100%">
-            <BarChart layout="vertical" data={data} margin={{ top: 5, right: 30, left: 80, bottom: 5 }}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis type="number" />
-              <YAxis 
-                dataKey="country" 
-                type="category" 
-                width={isMobile ? 30 : 80} 
-                tickFormatter={(value, index) => `${index + 1}位${isMobile ? '' : ` ${value}`}`}
-              />
-              <Tooltip
-                content={({ active, payload }) => {
-                  if (active && payload && payload.length > 0) {
-                    const entry = payload[0]
-                    if (!entry || !entry.payload || typeof entry.value !== "number") {
-                      return null
-                    }
+    <div className={`min-h-screen flex items-center ${isMobile ? 'justify-start' : 'justify-center'} p-[10px] ${isMobile ? 'ml-[10px]' : ''}`}>
+      <Card className="w-full max-w-4xl">
+        <CardHeader>
+          <CardTitle>各国の平均年収比較</CardTitle>
+          <CardDescription>単位: 百万円</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="h-[1000px]">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart layout="vertical" data={data} margin={{ top: 5, right: 30, left: 80, bottom: 5 }}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis type="number" />
+                <YAxis 
+                  dataKey="country" 
+                  type="category" 
+                  width={isMobile ? 30 : 80} 
+                  tickFormatter={(value, index) => `${index + 1}位${isMobile ? '' : ` ${value}`}`}
+                />
+                <Tooltip
+                  content={({ active, payload }) => {
+                    if (active && payload && payload.length > 0) {
+                      const entry = payload[0]
+                      if (!entry || !entry.payload || typeof entry.value !== "number") {
+                        return null
+                      }
 
+                      return (
+                        <div className="bg-white p-2 border border-gray-300 rounded shadow">
+                          <p className="font-bold">{entry.payload.country}</p>
+                          <p>{`平均年収: ${entry.value.toFixed(2)}百万円`}</p>
+                        </div>
+                      )
+                    }
+                    return null
+                  }}
+                />
+                <Legend />
+                <Bar
+                  dataKey="income"
+                  name="平均年収"
+                  fill="#0066cc"
+                  shape={(props: any) => {  
                     return (
-                      <div className="bg-white p-2 border border-gray-300 rounded shadow">
-                        <p className="font-bold">{entry.payload.country}</p>
-                        <p>{`平均年収: ${entry.value.toFixed(2)}百万円`}</p>
-                      </div>
+                      <rect
+                        x={props.x}
+                        y={props.y}
+                        width={props.width}
+                        height={props.height}
+                        fill={getColor(props.payload.income)}
+                        rx={4}
+                        ry={4}
+                      />
                     )
-                  }
-                  return null
-                }}
-              />
-              <Legend />
-              <Bar
-                dataKey="income"
-                name="平均年収"
-                fill="#0066cc"
-                shape={(props: any) => {  
-                  return (
-                    <rect
-                      x={props.x}
-                      y={props.y}
-                      width={props.width}
-                      height={props.height}
-                      fill={getColor(props.payload.income)}
-                      rx={4}
-                      ry={4}
-                    />
-                  )
-                }}
-              />
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
-      </CardContent>
-    </Card>
+                  }}
+                />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
   )
 }
 
