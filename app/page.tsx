@@ -32,7 +32,7 @@ const data = [
   { country: "インドネシア", income: 1.2 },
 ].sort((a, b) => b.income - a.income)
 
-const getColor = (income) => {
+const getColor = (income: number) => {
   const minIncome = Math.min(...data.map((d) => d.income))
   const maxIncome = Math.max(...data.map((d) => d.income))
   const normalizedIncome = (income - minIncome) / (maxIncome - minIncome)
@@ -55,11 +55,16 @@ export default function UpdatedAverageIncomeChart() {
               <YAxis dataKey="country" type="category" width={80} />
               <Tooltip
                 content={({ active, payload }) => {
-                  if (active && payload && payload.length) {
+                  if (active && payload && payload.length > 0) {
+                    const entry = payload[0]
+                    if (!entry || !entry.payload || typeof entry.value !== "number") {
+                      return null
+                    }
+
                     return (
                       <div className="bg-white p-2 border border-gray-300 rounded shadow">
-                        <p className="font-bold">{payload[0].payload.country}</p>
-                        <p>{`平均年収: ${payload[0].value.toFixed(2)}百万円`}</p>
+                        <p className="font-bold">{entry.payload.country}</p>
+                        <p>{`平均年収: ${entry.value.toFixed(2)}百万円`}</p>
                       </div>
                     )
                   }
@@ -71,7 +76,7 @@ export default function UpdatedAverageIncomeChart() {
                 dataKey="income"
                 name="平均年収"
                 fill="#0066cc"
-                shape={(props) => {
+                shape={(props: any) => {  
                   return (
                     <rect
                       x={props.x}
